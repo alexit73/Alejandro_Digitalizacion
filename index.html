@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reloj Pomodoro</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .pomodoro-container {
+            text-align: center;
+            background-color: #333;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px #000;
+        }
+
+        h1 {
+            color: #ff6b6b;
+            font-size: 2rem;
+        }
+
+        #timer {
+            font-size: 4rem;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 25px;
+            font-size: 1.2rem;
+            background-color: #ff6b6b;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ff4b4b;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-style: italic;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="pomodoro-container">
+        <h1>Reloj Pomodoro</h1>
+        <div id="timer">25:00</div>
+        <button onclick="toggleTimer()">Iniciar</button>
+        <div id="status">Modo: Trabajo</div>
+    </div>
+
+    <script>
+        let workMinutes = 25;
+        let breakMinutes = 5;
+
+        let seconds = 0;
+        let minutes = workMinutes;
+        let isRunning = false;
+        let isWorkTime = true;
+        let timerInterval;
+
+        function updateDisplay() {
+            let timer = document.getElementById("timer");
+            let min = minutes < 10 ? "0" + minutes : minutes;
+            let sec = seconds < 10 ? "0" + seconds : seconds;
+            timer.textContent = `${min}:${sec}`;
+        }
+
+        function toggleTimer() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                document.querySelector("button").textContent = "Iniciar";
+            } else {
+                isRunning = true;
+                document.querySelector("button").textContent = "Pausar";
+                timerInterval = setInterval(runTimer, 1000);
+            }
+        }
+
+        function runTimer() {
+            if (seconds === 0) {
+                if (minutes === 0) {
+                    isWorkTime = !isWorkTime;
+                    minutes = isWorkTime ? workMinutes : breakMinutes;
+                    seconds = 0;
+                    document.getElementById("status").textContent = isWorkTime ? "Modo: Trabajo" : "Modo: Descanso";
+                } else {
+                    minutes--;
+                    seconds = 59;
+                }
+            } else {
+                seconds--;
+            }
+            updateDisplay();
+        }
+
+        updateDisplay();
+    </script>
+</body>
+</html>
